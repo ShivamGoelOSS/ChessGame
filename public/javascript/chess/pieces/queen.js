@@ -64,3 +64,23 @@ Queen.prototype.moveTo = function(targetPosition) {
         //NOOP
     }
 };
+Queen.prototype.canAttack = function(targetPosition) {
+    let currentCol = this.position.charAt(0);
+    let currentRow = parseInt(this.position.charAt(1));
+    let targetCol = targetPosition.col;
+    let targetRow = parseInt(targetPosition.row);
+
+    let colDifference = Math.abs(targetCol.charCodeAt(0) - currentCol.charCodeAt(0));
+    let rowDifference = Math.abs(targetRow - currentRow);
+
+    // Queen can move like a Rook or a Bishop
+    if (currentCol === targetCol || currentRow === targetRow) {
+        // Straight line movement (like a Rook)
+        return this.board.isPathClear(this.position, targetPosition);
+    } else if (colDifference === rowDifference) {
+        // Diagonal movement (like a Bishop)
+        return this.board.isDiagonalPathClear(this.position, targetPosition);
+    }
+
+    return false;
+};

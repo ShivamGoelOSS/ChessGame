@@ -47,3 +47,20 @@ Bishop.prototype.moveTo = function(targetPosition) {
 Bishop.prototype.canAttack = function(targetPosition) {
     return this.isValidPosition(targetPosition);
 };
+Bishop.prototype.canAttack = function(targetPosition) {
+    let currentCol = this.position.charAt(0);
+    let currentRow = parseInt(this.position.charAt(1));
+    let targetCol = targetPosition.col;
+    let targetRow = parseInt(targetPosition.row);
+
+    let colDifference = Math.abs(targetCol.charCodeAt(0) - currentCol.charCodeAt(0));
+    let rowDifference = Math.abs(targetRow - currentRow);
+
+    // Bishops move diagonally
+    if (colDifference === rowDifference) {
+        // Check if the diagonal path is clear
+        return this.board.isDiagonalPathClear(this.position, targetPosition);
+    }
+
+    return false;
+};

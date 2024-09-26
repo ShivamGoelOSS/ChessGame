@@ -327,3 +327,45 @@ Board.prototype.isDiagonalPathClear = function(start, end) {
 
     return true;  // Path is clear
 };
+Board.prototype.isPositionUnderAttack = function(position, color) {
+    const opposingColor = color === 'white' ? 'black' : 'white';
+    const opposingPieces = opposingColor === 'white' ? this.whitePieces : this.blackPieces;
+
+    for (let pieceType in opposingPieces) {
+        let pieces = opposingPieces[pieceType];
+        if (Array.isArray(pieces)) {
+            for (let piece of pieces) {
+                if (piece.canAttack && piece.canAttack(position)) {
+                    return true;
+                }
+            }
+        } else if (pieces && pieces.canAttack && pieces.canAttack(position)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+Board.prototype.isPathClear = function(start, end) {
+    let startCol = start.charAt(0);
+    let startRow = parseInt(start.charAt(1));
+    let endCol = end.col;
+    let endRow = parseInt(end.row);
+
+    // Determine direction
+    let colStep = startCol === endCol ? 0 : (startCol < endCol ? 1 : -1);
+    let rowStep = startRow === endRow ? 0 : (startRow < endRow ? 1 : -1);
+
+    let currentCol = String.fromCharCode(startCol.charCodeAt(0) + colStep);
+    let currentRow = startRow + rowStep;
+
+    while (currentCol !== endCol || currentRow !== endRow) {
+        if (this.getPieceAt({col: currentCol, row: currentRow})) {
+            return false;  // Path is blocked
+        }
+        currentCol = String.fromCharCode(currentCol.charCodeAt(0) + colStep);
+        currentRow += rowStep;
+    }
+
+    return true;  // Path is clear
+};
