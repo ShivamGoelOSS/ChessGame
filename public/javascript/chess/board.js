@@ -64,7 +64,12 @@ Board.prototype.boardClicked = function(event) {
     if (selectedPiece) {
         // Check if it's the current player's turn
         if (selectedPiece.color !== this.turn) {
-            console.warn(`It's ${this.turn}'s turn`);
+            if(this.selectedPiece.color === this.turn){
+                this.capturePiece(selectedPiece);
+            }
+            else{
+                console.warn(`It's ${this.turn}'s turn`);
+            }
             return; // Don't select or move the wrong piece
         }
         this.selectPiece(event.target, selectedPiece);
@@ -76,14 +81,9 @@ Board.prototype.boardClicked = function(event) {
         
         // If there's no piece in the clicked cell or it's an opponent's piece
         if (!destinationPiece || destinationPiece.color !== this.selectedPiece.color) {
-            // Capture the opponent's piece, if present
-            if (destinationPiece && destinationPiece.color !== this.selectedPiece.color) {
-                this.capturePiece(destinationPiece);
-            }
-
-            // Move the selected piece if the move is valid and switch turns
+            // Move the selected piece if the move is valid
             if (this.selectedPiece.moveTo(clickedCell)) {
-                this.switchTurn();
+                this.switchTurn(); // Switch turn only after a valid move
                 this.deselectPiece(); // Deselect after moving
             }
         }
@@ -107,7 +107,15 @@ Board.prototype.deselectPiece = function() {
 Board.prototype.capturePiece = function(piece) {
     // Remove the captured piece from the board and its respective collection
     const position = piece.position;
-    
+
+    // Move the previously selected piece to the captured piece's position
+    if (this.selectedPiece) {
+        this.selectedPiece.moveTo({ row: position[1], col: position[0] }); // Move to the captured piece's position
+    }
+
+    // Update the turn after capturing
+    this.switchTurn(); // Switch turn after capturing a piece
+
     // Remove from whitePieces if it's a white piece
     if (piece.color === 'white') {
         for (let type in this.whitePieces) {
@@ -170,6 +178,16 @@ Board.prototype.getPieceAt = function(cell){
 }
 
 Board.prototype.selectPiece = function(clickedElement, selectedPiece) {
+    const clickedCell = this.getClickedBlock(event); // Get the clicked cell
+    const destinationPiece = this.getPieceAt(clickedCell); // Get the piece at the clicked cell
+
+    // If the clicked piece is an opponent's piece, capture it
+    if (destinationPiece && destinationPiece.color !== this.turn) {
+        this.capturePiece(destinationPiece);
+        return; // Exit after capturing
+    }
+
+    // Highlight the selected piece
     if (clickedElement.classList.contains('piece')) {
         clickedElement.classList.add('selected');
     } else {

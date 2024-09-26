@@ -1,11 +1,10 @@
 var Pawn = function(config){
     this.type = 'pawn';
     this.board = config.board;
-    this.constructor(config);
+    Piece.call(this, config); // Call the Piece constructor
 };
 
-
-Pawn.prototype = new Piece({});
+Pawn.prototype = Object.create(Piece.prototype);
 
 Pawn.prototype.isValidPosition = function(targetPosition){
     // Convert current position to row and column
@@ -28,8 +27,11 @@ Pawn.prototype.isValidPosition = function(targetPosition){
         }
     } else if (Math.abs(targetPosition.col.charCodeAt(0) - currentCol.charCodeAt(0)) === 1 &&
                targetPosition.row === (currentRow + moveDistance).toString()) {
-        // Diagonal capture (assuming there's an enemy piece, which should be checked in the main game logic)
-        return true;
+        // Diagonal capture
+        const targetPiece = this.board.getPieceAt(targetPosition);
+        if (targetPiece && targetPiece.color !== this.color) {
+            return true; // Valid diagonal capture
+        }
     }
 
     // If none of the above conditions are met, the move is invalid

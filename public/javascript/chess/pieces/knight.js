@@ -1,5 +1,6 @@
 var Knight = function(config) {
     this.type = 'knight';
+    this.board = config.board;
     this.constructor(config);
 };
 
@@ -29,6 +30,10 @@ Knight.prototype.isValidPosition = function(targetPosition) {
 
 Knight.prototype.moveTo = function(targetPosition) {    
     if (this.isValidPosition(targetPosition)) {
+        const targetPiece = this.board.getPieceAt(targetPosition);
+        if (targetPiece && targetPiece.color !== this.color) {
+            this.board.killPiece(targetPiece); // Kill the opponent's piece
+        }
         this.position = targetPosition.col + targetPosition.row;
         this.render();
         return true;

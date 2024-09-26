@@ -27,7 +27,6 @@ Rook.prototype.isValidMove = function(targetPosition) {
         // Check if the target position is occupied by an opponent's piece
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
-            this.board.kill(targetPiece);
             return true; // Valid capture move
         }
         return true; // Valid move
@@ -42,7 +41,6 @@ Rook.prototype.isValidMove = function(targetPosition) {
         // Check if the target position is occupied by an opponent's piece
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
-            this.board.kill(targetPiece);
             return true; // Valid capture move
         }
         return true; // Valid move

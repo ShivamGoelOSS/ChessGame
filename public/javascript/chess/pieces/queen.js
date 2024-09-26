@@ -1,10 +1,33 @@
 var Queen = function(config) {
     this.type = 'queen';
     this.board = config.board;
-    this.constructor(config);
+    Piece.call(this, config); // Call the Piece constructor
 };
 
-Queen.prototype = new Piece({});
+Queen.prototype = Object.create(Piece.prototype);
+Queen.prototype.constructor = Queen;
+
+Queen.prototype.isPathClear = function(targetPosition) {
+    let currentCol = this.position.charCodeAt(0);
+    let currentRow = parseInt(this.position.charAt(1));
+    let targetCol = targetPosition.col.charCodeAt(0);
+    let targetRow = parseInt(targetPosition.row);
+    let colStep = targetCol > currentCol ? 1 : (targetCol < currentCol ? -1 : 0);
+    let rowStep = targetRow > currentRow ? 1 : (targetRow < currentRow ? -1 : 0);
+
+    let nextCol = currentCol + colStep;
+    let nextRow = currentRow + rowStep;
+
+    while (nextCol !== targetCol || nextRow !== targetRow) {
+        if (this.board.getPieceAt({ col: String.fromCharCode(nextCol), row: nextRow })) {
+            return false; // Path is blocked
+        }
+        nextCol += colStep;
+        nextRow += rowStep;
+    }
+
+    return true; // Path is clear
+};
 
 Queen.prototype.isValidPosition = function(targetPosition) {
     // Convert current position to row and column
@@ -20,7 +43,7 @@ Queen.prototype.isValidPosition = function(targetPosition) {
     let rowDiff = Math.abs(targetRow - currentRow);
 
     // Check if the move is valid (same row, same column, or same diagonal)
-    if (currentCol === targetCol || currentRow === targetRow || colDiff === rowDiff) {
+    if ((currentCol === targetCol || currentRow === targetRow || colDiff === rowDiff) && this.isPathClear(targetPosition)) {
         return true;
     }
 
