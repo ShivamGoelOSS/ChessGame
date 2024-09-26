@@ -304,3 +304,26 @@ Board.prototype.killPiece = function(piece) {
 
     console.log(`${piece.color} ${piece.constructor.name} captured at ${position}`);
 };
+
+Board.prototype.isDiagonalPathClear = function(start, end) {
+    let startCol = start.charAt(0);
+    let startRow = parseInt(start.charAt(1));
+    let endCol = end.col;
+    let endRow = parseInt(end.row);
+
+    let colStep = startCol < endCol ? 1 : -1;
+    let rowStep = startRow < endRow ? 1 : -1;
+
+    let col = String.fromCharCode(startCol.charCodeAt(0) + colStep);
+    let row = startRow + rowStep;
+
+    while (col !== endCol && row !== endRow) {
+        if (this.getPieceAt({col: col, row: row})) {
+            return false;  // Path is blocked
+        }
+        col = String.fromCharCode(col.charCodeAt(0) + colStep);
+        row += rowStep;
+    }
+
+    return true;  // Path is clear
+};
