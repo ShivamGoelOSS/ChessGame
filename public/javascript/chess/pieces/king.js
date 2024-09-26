@@ -25,7 +25,7 @@ King.prototype.isSafePosition = function(targetPosition) {
 };
 
 King.prototype.moveTo = function(targetPosition) {
-    if (this.isValidPosition(targetPosition) && this.isSafePosition(targetPosition)) {
+    if (this.isValidMove(targetPosition) && this.isSafePosition(targetPosition)) {
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
             this.board.killPiece(targetPiece); // Kill the opponent's piece
@@ -34,7 +34,7 @@ King.prototype.moveTo = function(targetPosition) {
         this.render();
         return true;
     } else {
-        if (!this.isValidPosition(targetPosition)) {
+        if (!this.isValidMove(targetPosition)) {
             console.warn("Invalid move for king");
         } else {
             console.warn("Move would put king in check");

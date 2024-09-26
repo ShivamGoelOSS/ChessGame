@@ -45,7 +45,7 @@ Bishop.prototype.moveTo = function(targetPosition) {
 };
 
 Bishop.prototype.canAttack = function(targetPosition) {
-    return this.isValidPosition(targetPosition);
+    return this.isValidMove(targetPosition);
 };
 Bishop.prototype.canAttack = function(targetPosition) {
     let currentCol = this.position.charAt(0);
