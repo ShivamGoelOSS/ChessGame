@@ -7,7 +7,7 @@ var King = function(config){
 King.prototype = Object.create(Piece.prototype); 
 King.prototype.constructor = King; 
 
-King.prototype.isValidPosition = function(targetPosition){
+King.prototype.isValidMove = function(targetPosition){
     // Convert current position to row and column
     let currentCol = this.position.charAt(0);
     let currentRow = parseInt(this.position.charAt(1));
@@ -27,7 +27,7 @@ King.prototype.isValidPosition = function(targetPosition){
 }
 
 King.prototype.moveTo = function(targetPosition) {
-    if (this.isValidPosition(targetPosition)) {
+    if (this.isValidMove(targetPosition)) {
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
             this.board.killPiece(targetPiece); // Kill the opponent's piece

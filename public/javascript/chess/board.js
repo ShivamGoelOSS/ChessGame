@@ -65,7 +65,12 @@ Board.prototype.boardClicked = function(event) {
         // Check if it's the current player's turn
         if (selectedPiece.color !== this.turn) {
             if(this.selectedPiece.color === this.turn){
-                this.capturePiece(selectedPiece);
+                if(this.selectedPiece.isValidMove(clickedCell)){
+                    this.capturePiece(selectedPiece);
+                }
+                else{
+                    console.warn("Invalid move");
+                }
             }
             else{
                 console.warn(`It's ${this.turn}'s turn`);

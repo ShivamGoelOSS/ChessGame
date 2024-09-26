@@ -29,7 +29,7 @@ Queen.prototype.isPathClear = function(targetPosition) {
     return true; // Path is clear
 };
 
-Queen.prototype.isValidPosition = function(targetPosition) {
+Queen.prototype.isValidMove = function(targetPosition) {
     // Convert current position to row and column
     let currentCol = this.position.charAt(0);
     let currentRow = parseInt(this.position.charAt(1));
@@ -52,7 +52,7 @@ Queen.prototype.isValidPosition = function(targetPosition) {
 };
 
 Queen.prototype.moveTo = function(targetPosition) {    
-    if (this.isValidPosition(targetPosition)) {
+    if (this.isValidMove(targetPosition)) {
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
             this.board.killPiece(targetPiece); // Kill the opponent's piece

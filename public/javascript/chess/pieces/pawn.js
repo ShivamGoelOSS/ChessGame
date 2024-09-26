@@ -6,7 +6,7 @@ var Pawn = function(config){
 
 Pawn.prototype = Object.create(Piece.prototype);
 
-Pawn.prototype.isValidPosition = function(targetPosition){
+Pawn.prototype.isValidMove = function(targetPosition){
     // Convert current position to row and column
     let currentCol = this.position.charAt(0);
     let currentRow = parseInt(this.position.charAt(1));
@@ -20,10 +20,11 @@ Pawn.prototype.isValidPosition = function(targetPosition){
         // Moving straight
         if (targetPosition.row === (currentRow + moveDistance).toString()) {
             // Regular one-square move
-            return true;
+            return !this.board.getPieceAt(targetPosition); // Ensure the target position is empty
         } else if (currentRow === initialRow && targetPosition.row === (currentRow + 2 * moveDistance).toString()) {
             // Initial two-square move
-            return true;
+            const intermediatePosition = { col: currentCol, row: (currentRow + moveDistance).toString() };
+            return !this.board.getPieceAt(targetPosition) && !this.board.getPieceAt(intermediatePosition); // Ensure both positions are empty
         }
     } else if (Math.abs(targetPosition.col.charCodeAt(0) - currentCol.charCodeAt(0)) === 1 &&
                targetPosition.row === (currentRow + moveDistance).toString()) {
@@ -40,7 +41,7 @@ Pawn.prototype.isValidPosition = function(targetPosition){
 }
 
 Pawn.prototype.moveTo = function(targetPosition) {    
-    if (this.isValidPosition(targetPosition)) {
+    if (this.isValidMove(targetPosition)) { // Changed to isValidMove
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
             this.board.killPiece(targetPiece); // Kill the opponent's piece

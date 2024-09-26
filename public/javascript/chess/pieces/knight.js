@@ -6,7 +6,7 @@ var Knight = function(config) {
 
 Knight.prototype = new Piece({});
 
-Knight.prototype.isValidPosition = function(targetPosition) {
+Knight.prototype.isValidMove = function(targetPosition) {
     // Convert current position to row and column
     let currentCol = this.position.charAt(0);
     let currentRow = parseInt(this.position.charAt(1));
@@ -29,7 +29,7 @@ Knight.prototype.isValidPosition = function(targetPosition) {
 };
 
 Knight.prototype.moveTo = function(targetPosition) {    
-    if (this.isValidPosition(targetPosition)) {
+    if (this.isValidMove(targetPosition)) {
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece && targetPiece.color !== this.color) {
             this.board.killPiece(targetPiece); // Kill the opponent's piece
