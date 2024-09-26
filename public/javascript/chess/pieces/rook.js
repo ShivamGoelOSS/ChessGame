@@ -1,7 +1,7 @@
 var Rook = function(config) {
     this.type = 'rook';
-    this.board = config.board;
-    Piece.call(this, config);
+    this.board = config.board; // Ensure board reference is set
+    Piece.call(this, config); // Call the Piece constructor
 };
 
 Rook.prototype = Object.create(Piece.prototype);
@@ -60,8 +60,8 @@ Rook.prototype.moveTo = function(targetPosition) {
         const targetPiece = this.board.getPieceAt(targetPosition);
         if (targetPiece) {
             if (targetPiece.color !== this.color) {
-                // Kill the opponent's piece
-                this.kill(targetPiece);
+                // Kill the opponent's piece using the board's method
+                this.board.killPiece(targetPiece);
             } else {
                 console.log("Invalid move: Cannot capture your own piece");
                 return;
@@ -78,6 +78,7 @@ Rook.prototype.moveTo = function(targetPosition) {
         this.render();
         
         console.log(`Rook moved to ${this.position}`);
+        return true;
     } else {
         console.log("Invalid move for rook");
     }

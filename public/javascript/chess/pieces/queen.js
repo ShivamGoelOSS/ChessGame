@@ -1,5 +1,6 @@
 var Queen = function(config) {
     this.type = 'queen';
+    this.board = config.board;
     this.constructor(config);
 };
 
@@ -29,10 +30,14 @@ Queen.prototype.isValidPosition = function(targetPosition) {
 
 Queen.prototype.moveTo = function(targetPosition) {    
     if (this.isValidPosition(targetPosition)) {
+        const targetPiece = this.board.getPieceAt(targetPosition);
+        if (targetPiece && targetPiece.color !== this.color) {
+            this.board.killPiece(targetPiece); // Kill the opponent's piece
+        }
         this.position = targetPosition.col + targetPosition.row;
         this.render();
         return true;
     } else {
-
+        //NOOP
     }
 };

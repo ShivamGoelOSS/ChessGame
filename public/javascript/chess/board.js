@@ -52,8 +52,6 @@ Board.prototype.clearSelection = function(){
     });
 };
 
-
-
 Board.prototype.boardClicked = function(event) {    
     this.clearSelection();
     
@@ -92,7 +90,6 @@ Board.prototype.boardClicked = function(event) {
     }
 };
 
-
 Board.prototype.deselectPiece = function() {
     if (this.selectedPiece) {
         // Remove the 'selected' class from the currently selected piece
@@ -106,7 +103,6 @@ Board.prototype.deselectPiece = function() {
         this.selectedPiece = null; // Reset selected piece
     }
 };
-
 
 Board.prototype.capturePiece = function(piece) {
     // Remove the captured piece from the board and its respective collection
@@ -142,10 +138,6 @@ Board.prototype.capturePiece = function(piece) {
 
     console.log(`${piece.color} ${piece.constructor.name} captured at ${position}`);
 };
-
-
-
-
 
 Board.prototype.getPieceAt = function(cell){
     if (!cell || !cell.row || !cell.col) return false;
@@ -198,48 +190,48 @@ Board.prototype.switchTurn = function() {
 Board.prototype.initiateGame = function() {
     // Create white pieces
     this.whitePieces = {
-        king: new King({ color: 'white', position: 'E1' }),
-        queen: new Queen({ color: 'white', position: 'D1' }),
+        king: new King({ color: 'white', position: 'E1', board: this }), // Pass board reference
+        queen: new Queen({ color: 'white', position: 'D1', board: this }),
         bishops: [
-            new Bishop({ color: 'white', position: 'C1' }),
-            new Bishop({ color: 'white', position: 'F1' })
+            new Bishop({ color: 'white', position: 'C1', board: this }),
+            new Bishop({ color: 'white', position: 'F1', board: this })
         ],
         knights: [
-            new Knight({ color: 'white', position: 'B1' }),
-            new Knight({ color: 'white', position: 'G1' })
+            new Knight({ color: 'white', position: 'B1', board: this }),
+            new Knight({ color: 'white', position: 'G1', board: this })
         ],
         rooks: [
-            new Rook({ color: 'white', position: 'A1' }),
-            new Rook({ color: 'white', position: 'H1' })
+            new Rook({ color: 'white', position: 'A1', board: this }), // Pass board reference
+            new Rook({ color: 'white', position: 'H1', board: this })
         ],
         pawns: []
     };
 
     for (let i = 0; i < 8; i++) {
-        this.whitePieces.pawns.push(new Pawn({ color: 'white', position: String.fromCharCode(65 + i) + '2' }));
+        this.whitePieces.pawns.push(new Pawn({ color: 'white', position: String.fromCharCode(65 + i) + '2', board: this })); // Pass board reference
     }
 
     // Create black pieces
     this.blackPieces = {
-        king: new King({ color: 'black', position: 'E8' }),
-        queen: new Queen({ color: 'black', position: 'D8' }),
+        king: new King({ color: 'black', position: 'E8', board: this }),
+        queen: new Queen({ color: 'black', position: 'D8', board: this }),
         bishops: [
-            new Bishop({ color: 'black', position: 'C8' }),
-            new Bishop({ color: 'black', position: 'F8' })
+            new Bishop({ color: 'black', position: 'C8', board: this }),
+            new Bishop({ color: 'black', position: 'F8', board: this })
         ],
         knights: [
-            new Knight({ color: 'black', position: 'B8' }),
-            new Knight({ color: 'black', position: 'G8' })
+            new Knight({ color: 'black', position: 'B8', board: this }),
+            new Knight({ color: 'black', position: 'G8', board: this })
         ],
         rooks: [
-            new Rook({ color: 'black', position: 'A8' }),
-            new Rook({ color: 'black', position: 'H8' })
+            new Rook({ color: 'black', position: 'A8', board: this }),
+            new Rook({ color: 'black', position: 'H8', board: this })
         ],
         pawns: []
     };
 
     for (let i = 0; i < 8; i++) {
-        this.blackPieces.pawns.push(new Pawn({ color: 'black', position: String.fromCharCode(65 + i) + '7' }));
+        this.blackPieces.pawns.push(new Pawn({ color: 'black', position: String.fromCharCode(65 + i) + '7', board: this })); // Pass board reference
     }
 };
 
@@ -259,4 +251,38 @@ Board.prototype.renderAllPieces = function() {
             piece.render();
         }
     });
+};
+
+Board.prototype.killPiece = function(piece) {
+    const position = piece.position;
+
+    // Remove from whitePieces if it's a white piece
+    if (piece.color === 'white') {
+        for (let type in this.whitePieces) {
+            if (Array.isArray(this.whitePieces[type])) {
+                this.whitePieces[type] = this.whitePieces[type].filter(p => p.position !== position);
+            } else if (this.whitePieces[type].position === position) {
+                delete this.whitePieces[type];
+            }
+        }
+    }
+
+    // Remove from blackPieces if it's a black piece
+    if (piece.color === 'black') {
+        for (let type in this.blackPieces) {
+            if (Array.isArray(this.blackPieces[type])) {
+                this.blackPieces[type] = this.blackPieces[type].filter(p => p.position !== position);
+            } else if (this.blackPieces[type].position === position) {
+                delete this.blackPieces[type];
+            }
+        }
+    }
+
+    // Visually remove the piece from the board
+    const pieceElement = document.querySelector(`.piece[data-position="${piece.position}"]`);
+    if (pieceElement) {
+        pieceElement.remove();
+    }
+
+    console.log(`${piece.color} ${piece.constructor.name} captured at ${position}`);
 };

@@ -1,8 +1,8 @@
 var Pawn = function(config){
     this.type = 'pawn';
+    this.board = config.board;
     this.constructor(config);
 };
-
 
 
 Pawn.prototype = new Piece({});
@@ -37,13 +37,16 @@ Pawn.prototype.isValidPosition = function(targetPosition){
     return false;
 }
 
-Pawn.prototype.moveTo = function(targetPosition){    
-    if(this.isValidPosition(targetPosition)){
+Pawn.prototype.moveTo = function(targetPosition) {    
+    if (this.isValidPosition(targetPosition)) {
+        const targetPiece = this.board.getPieceAt(targetPosition);
+        if (targetPiece && targetPiece.color !== this.color) {
+            this.board.killPiece(targetPiece); // Kill the opponent's piece
+        }
         this.position = targetPosition.col + targetPosition.row;
         this.render();
         return true;
-    }else{
-
+    } else {
+        //NOOP
     }
-    
-}
+};

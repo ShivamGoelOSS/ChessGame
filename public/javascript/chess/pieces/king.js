@@ -1,5 +1,6 @@
 var King = function(config){
     this.type = 'king';
+    this.board = config.board;
     Piece.call(this, config); 
 };
 
@@ -25,11 +26,15 @@ King.prototype.isValidPosition = function(targetPosition){
     return false;
 }
 
-King.prototype.moveTo = function(targetPosition){
-    // Ensure the move is valid
+King.prototype.moveTo = function(targetPosition) {
     if (this.isValidPosition(targetPosition)) {
+        const targetPiece = this.board.getPieceAt(targetPosition);
+        if (targetPiece && targetPiece.color !== this.color) {
+            this.board.killPiece(targetPiece); // Kill the opponent's piece
+        }
         this.position = targetPosition.col + targetPosition.row;
         this.render();
+        return true;
     } else {
         //NOOP
     }
