@@ -44,5 +44,5 @@ Pawn.prototype.moveTo = function(targetPosition){
     }else{
         //NOOP
     }
-    
+    z
 }

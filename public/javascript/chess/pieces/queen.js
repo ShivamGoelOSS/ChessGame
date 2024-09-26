@@ -22,6 +22,14 @@ Queen.prototype.moveTo = function(targetPosition) {
     console.log(`Queen moved to ${targetPosition.col}${targetPosition.row}`);
 };
 
+// Add this method to make it consistent with other pieces
+Queen.prototype.render = function() {
+    var $square = document.querySelector(`#game-ct li[data-col="${this.position[0]}"] li[data-row="${this.position[1]}"]`);
+    if ($square) {
+        $square.innerHTML = `<div class="piece queen ${this.color}"></div>`;
+    }
+};
+
 Queen.prototype.isValidMove = function(targetPosition) {
     var currentCol = this.position[0].toUpperCase().charCodeAt(0);
     var currentRow = parseInt(this.position[1], 10);
