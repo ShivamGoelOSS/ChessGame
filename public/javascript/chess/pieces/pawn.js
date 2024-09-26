@@ -53,3 +53,15 @@ Pawn.prototype.moveTo = function(targetPosition) {
         //NOOP
     }
 };
+Pawn.prototype.canAttack = function(targetPosition) {
+    let currentCol = this.position.charAt(0);
+    let currentRow = parseInt(this.position.charAt(1));
+    let targetCol = targetPosition.col;
+    let targetRow = parseInt(targetPosition.row);
+
+    let colDifference = Math.abs(targetCol.charCodeAt(0) - currentCol.charCodeAt(0));
+    let rowDifference = this.color === 'white' ? targetRow - currentRow : currentRow - targetRow;
+
+    // Pawns can attack diagonally forward one square
+    return colDifference === 1 && rowDifference === 1;
+};

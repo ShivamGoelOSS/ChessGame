@@ -97,3 +97,17 @@ Rook.prototype.deRender = function() {
         $square.innerHTML = '';
     }
 };
+Rook.prototype.canAttack = function(targetPosition) {
+    let currentCol = this.position.charAt(0);
+    let currentRow = parseInt(this.position.charAt(1));
+    let targetCol = targetPosition.col;
+    let targetRow = parseInt(targetPosition.row);
+
+    // Rooks can attack in straight lines (same row or same column)
+    if (currentCol === targetCol || currentRow === targetRow) {
+        // Check if the path is clear
+        return this.board.isPathClear(this.position, targetPosition);
+    }
+
+    return false;
+};

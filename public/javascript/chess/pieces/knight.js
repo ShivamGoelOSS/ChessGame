@@ -41,3 +41,15 @@ Knight.prototype.moveTo = function(targetPosition) {
         // NOOP
     }
 };
+Knight.prototype.canAttack = function(targetPosition) {
+    let currentCol = this.position.charAt(0);
+    let currentRow = parseInt(this.position.charAt(1));
+    let targetCol = targetPosition.col;
+    let targetRow = parseInt(targetPosition.row);
+
+    let colDifference = Math.abs(targetCol.charCodeAt(0) - currentCol.charCodeAt(0));
+    let rowDifference = Math.abs(targetRow - currentRow);
+
+    // Knights move in an L-shape: 2 squares in one direction and 1 in the other
+    return (colDifference === 2 && rowDifference === 1) || (colDifference === 1 && rowDifference === 2);
+};
